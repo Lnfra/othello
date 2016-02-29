@@ -30,4 +30,10 @@ table, th, td {
   background-color: whitesmoke;
 }
 
+td.validMove:hover {
+  background-color: grey;
+  border: dashed;
+  border-color: white;
+}
+
 /*# sourceMappingURL=styles.css.map */
