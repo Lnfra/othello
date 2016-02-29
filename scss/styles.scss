@@ -1,0 +1,51 @@
+h2 {
+  text-align: center;
+}
+
+//FIXME: To fix the grid so tha it is the same size filled as well as empty
+
+table, th, td {
+  border-collapse: collapse;
+  border: 1px solid black;
+  text-align: center;
+  background-color:green;
+  font-size: 30px;
+  margin:auto;
+  padding: 60px;
+}
+
+td {
+
+}
+
+//Declare circle as a mixin so that it is not duplicated
+@mixin circle {
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  padding: 30px;
+  /* width and height can be anything, as long as they're equal */
+}
+
+.black {
+  @include circle;
+  background-color: black;
+}
+
+.white {
+  @include circle;
+  background-color: whitesmoke;
+}
+
+
+//td > button.player1:hover {
+//  background-color:lightpink;
+//  border: dashed;
+//  border-color: white;
+//}
+//
+//td > button.player2:hover {
+//  background-color:lightblue;
+//  border: dashed;
+//  border-color: white;
+//}
