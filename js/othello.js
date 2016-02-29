@@ -53,8 +53,8 @@ function init() {
     //Sets the value of a cell
     function setCell(cellId, color) {
         var cellIds =  cellId.split('');
-        var vertical = Number(cellIds[0]);
-        var horizontal = Number(cellIds[1]);
+        var vertical = Number(cellIds[1]);
+        var horizontal = Number(cellIds[0]);
         //Set board value
         board[vertical][horizontal]= color.toLowerCase();
         //Set dom value
@@ -66,8 +66,8 @@ function init() {
     //Gets the value of a cell
     function getCell(cellId) {
         var cellIds =  cellId.split('');
-        var vertical = Number(cellIds[0]);
-        var horizontal = Number(cellIds[1]);
+        var vertical = Number(cellIds[1]);
+        var horizontal = Number(cellIds[0]);
         return board[vertical][horizontal];
     }
 
