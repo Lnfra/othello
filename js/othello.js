@@ -2,16 +2,62 @@
 
 //Initialize the game and call the game loop
 function init() {
+
+    //Model of board
+    var board = {
+        width: 4,
+        height: 4,
+        data:[],
+
+        //Creates a 2D array initialized with null values for the board model
+        createBoard: function(){
+            var data = [];
+            for(i = 0; i < this.height; i++) {
+                data[i] = [];
+                for(j = 0; j < this.width; j++) {
+                    data[i][j] = null;
+                }
+            }
+            this.data = data;
+        },
+
+        setCell: function(x, y, value){
+            this.data[y][x] = value;
+        },
+
+        getCell: function(x, y){
+            return this.data[y][x];
+        },
+
+        printBoard: function(){
+            console.log('Printing current board');
+            this.data.forEach(function(row){
+                console.log(row);
+            });
+        },
+
+        //Check that position is within the board
+        //TODO: Write a test case to verify method returns correct results
+        isOnboard: function(x, y) {
+            return (y >= 0 && y < this.height) && (x >=0 && x < this.width);
+        }
+    };
+
     var currentPlayer = 'black';
-    //Model to store the states
-    var boardWidth = 4;
-    var boardHeight = 4;
-    var board = createBoard(boardWidth, boardHeight, null)
+
+    //Set the label for the current player
     document.getElementById('currentPlayer').innerHTML = "It is " + currentPlayer + "'s turn.";
-    initialPositions(board);
+
+    //Initialize the board
+    board.createBoard();
+    //Set the board to the initial layout
+    initialPositions();
+    //Get the valid cells for next move and set the css class for hover effect
     setValidCells();
+    //Attach listeners to all cells
     addListeners();
-    printBoard();
+    //print board status to console for debugging
+    board.printBoard();
 
 
     //Assign event listeners to all cells in the board
@@ -22,6 +68,7 @@ function init() {
         }
     }
 
+    //Event listener to handle processing when user clicks a cell
     function changeColor(event){
         console.log('clicked');
         console.log(event.target.id);
@@ -51,29 +98,28 @@ function init() {
             console.log('Ignore click as button has been clicked before.');
         }
 
-        printBoard();
+        board.printBoard();
     }
 
-    //Sets the value of a cell
+    //Sets the value of a cell in the model and the dom
     function setCell(cellId, color) {
         var cellIds =  cellId.split('');
         var vertical = Number(cellIds[1]);
         var horizontal = Number(cellIds[0]);
         //Set board value
-        board[vertical][horizontal]= color.toLowerCase();
+        board.setCell(horizontal, vertical, color.toLowerCase());
         //Set dom value
         document.getElementById(cellId).className = color;
-        console.log(board.toString());
-
+        board.printBoard();
     }
 
     //TODO: Can the below be improved besides using split?
     //Gets the value of a cell
     function getCell(cellId) {
         var cellIds =  cellId.split('');
-        var vertical = Number(cellIds[1]);
-        var horizontal = Number(cellIds[0]);
-        return board[vertical][horizontal];
+        var x = Number(cellIds[0]);
+        var y = Number(cellIds[1]);
+        return board.getCell(x, y);
     }
 
     //Set the board to the initial layout
@@ -84,6 +130,7 @@ function init() {
         setCell('22', 'white');
     }
 
+    //Use getValidMoves to check which cells are valid moves for the current player
     function setValidCells() {
         var existingValidMoves = Array.from(document.getElementsByClassName('validMove'));
         var newValidMoves = getValidMoves();
@@ -93,33 +140,21 @@ function init() {
             position.className='';
         });
 
-        newValidMoves.forEach( function( position){
+        newValidMoves.forEach( function(position){
             var cell = document.getElementById(position[0].toString() + position[1].toString());
             cell.className ='validMove';
         });
 
         //TODO: Should we remove the event listener from those cells which are not valid moves? or just handle in the listener if/else
     }
-
-    function printBoard() {
-        console.log('Printing Board');
-        board.forEach(function(row){
-            console.log(row);
-        });
-    }
-
+    
+    //Changes the currentPlayer to the next player
     function switchPlayerTo(player) {
         //Toggle value of current player
         currentPlayer = player;
-
         //Update display display to show which player is next
         document.getElementById('currentPlayer').innerHTML = "It is " + player + "'s turn.";
 
-        //Change the class for all buttons on the board to affect hover color
-        //var boardButtons = document.querySelectorAll('td > button');
-        //for (i = 0; i < boardButtons.length; ++i) {
-        //    boardButtons[i].className = player.toLowerCase();
-        //}
     }
 
     //Check board to see which positions are valid moves for the current player
@@ -131,8 +166,8 @@ function init() {
         var validMoves = [];
         //Traverse the board and check all spaces
 
-        for(y = 0; y < board.length; y++) {
-            for(x = 0; x < board[0].length; x++) {
+        for(y = 0; y < board.height; y++) {
+            for(x = 0; x < board.width; x++) {
                 var toBeFlipped = cellsToBeFlipped(x, y);
                 if(toBeFlipped.length != 0){
                     //for all moves which cause cells to be flipped they are valid
@@ -153,13 +188,13 @@ function init() {
         var allDirections = [[-1,-1], [0,-1], [1,-1], [1,0], [1,1], [0,1], [-1,1], [-1,0]];
         var toBeFlipped = [];
 
-        if(board[y][x] !=null){
+        if(board.getCell(x, y) !=null){
             //if this cell is already set do not need to test if it is a valid move
             return toBeFlipped;
         }else{
             //Set the cell temporarily for the purpose of evaluating if it will cause discs to flip
             //Reset the cell back to null before end of function
-            board[y][x] = currentPlayer;
+            board.setCell(x, y, currentPlayer);
         }
 
         //Loop through each direction
@@ -170,16 +205,16 @@ function init() {
 
             currX = currX + currDir[0];
             currY = currY + currDir[1];
-            if(isOnboard(currX, currY) && board[currY][currX] == opponentColor()){
+            if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == opponentColor()){
                 //if the very next position contains opponents colour
                 //continue in the same direction
                 while(true){
                     console.log('in while loop 1')
                     currX = currX + currDir[0];
                     currY = currY + currDir[1];
-                    if(isOnboard(currX, currY) && board[currY][currX] == opponentColor()){
+                    if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == opponentColor()){
                        continue;
-                    } else if(isOnboard(currX, currY) && board[currY][currX] == currentPlayer){
+                    } else if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == currentPlayer){
                         //Keep navigating backwards until you have reached the starting position
                         while(true){
                             console.log('in while loop 2')
@@ -207,29 +242,23 @@ function init() {
 
                 }
 
-            } else if(isOnboard(currX, currY)) {
+            } else if(board.isOnboard(currX, currY)) {
                 //if the very next position is on the board and contains same colour or no color
                 //skip to next direction
                 continue;
-            } else if(!isOnboard(currX, currY)) {
+            } else if(!board.isOnboard(currX, currY)) {
                 //if the very next position is not on the board skip to next direction
                 continue;
             }
         }
 
         //Reset the cell back to empty after the testingis done
-        board[y][x] = null;
+        board.setCell(x, y, null);
         console.log('Testing position x =' + x + " y= " + y);
         console.log('length of tobeflipped ' + toBeFlipped.length );
         console.log('positions to be flipped ' + toBeFlipped)
         //Return list of discs to be flipped
         return toBeFlipped;
-    }
-
-    //Check that position is within the board
-    //TODO: Write a test case to verify method returns correct results
-    function isOnboard(x, y) {
-        return (y >= 0 && y < board.length) && (x >=0 && x < board[0].length);
     }
 
     //Returns the color of the other player
@@ -243,21 +272,6 @@ function init() {
 
 
 }// end of init()
-
-
-
-//Creates a 2D array initialized with a value
-function createBoard(width, height, val) {
-    var board = [];
-    for(i = 0; i < height; i++) {
-        board[i] = [];
-        for(j = 0; j < width; j++) {
-            board[i][j] = val;
-        }
-    }
-    return board;
-}
-
 
 //Load only after the page has loaded
 window.addEventListener("load", init ,false);
