@@ -5,6 +5,7 @@ function init() {
 
     //Model of board
     var board = {
+        //TODO: Look into setting the width and height + html table in DOM as configurable instead of hardcoding it
         width: 4,
         height: 4,
         data:[],
@@ -80,7 +81,12 @@ function init() {
         var isUnclickedButton = getCell(cellId) == null;
 
         if (currentPlayer == 'black' && isUnclickedButton) {
-            cell.className = 'black';
+            //TODO: To try and  refactor the below code so that the below order dosent matter.
+            //TODO: processing by side effect is prone to error hard to debug
+            //Note flip cells before changing currentPlayer as flipCells uses the value of currentPlayer
+            //Also before setting cell color as function ignores cells which are already set
+            flipCells(cellId);
+
             setCell(cellId, 'black');
             //checkForWinner();
             switchPlayerTo('white');
@@ -88,7 +94,10 @@ function init() {
             setValidCells();
 
         } else if (currentPlayer == 'white' && isUnclickedButton) {
-            cell.className = 'white';
+            //Note flip cells before changing currentPlayer as flipCells uses the value of currentPlayer
+            //Also before setting cell color as function ignores cells which are already set
+            flipCells(cellId);
+
             setCell(cellId, 'white');
             //checkForWinner();
             switchPlayerTo('black');
@@ -99,6 +108,31 @@ function init() {
         }
 
         board.printBoard();
+    }
+
+
+    //Checks if a move is made what are the oponnents cells to be flipped
+    //And gones on to flip them
+    function flipCells(cellId){
+        //Check for a particular move made what are the cells to be flipped
+        var cellIds = cellId.split('');
+        var x = Number(cellIds[0]);
+        var y = Number(cellIds[1]);
+        var toFlip =  cellsToBeFlipped(x, y);
+
+        //TODO: Possible to write some method to flips both model and dom at the same time instead of handling seperately?!
+        toFlip.forEach( function(cell) {
+            //Flip the cells in the board model
+            board.setCell(cell[0], cell[1], currentPlayer );
+
+            //Also remember to flip the cells in the Dom
+            var cellId = cell[0].toString() + cell[1].toString();
+            document.getElementById(cellId).className = currentPlayer;
+
+        });
+
+        console.log('Cell clicked on = ' + cellId);
+        console.log('Cells to be flipped = ' + toFlip);
     }
 
     //Sets the value of a cell in the model and the dom
@@ -147,7 +181,7 @@ function init() {
 
         //TODO: Should we remove the event listener from those cells which are not valid moves? or just handle in the listener if/else
     }
-    
+
     //Changes the currentPlayer to the next player
     function switchPlayerTo(player) {
         //Toggle value of current player
@@ -272,6 +306,8 @@ function init() {
 
 
 }// end of init()
+
+
 
 //Load only after the page has loaded
 window.addEventListener("load", init ,false);
