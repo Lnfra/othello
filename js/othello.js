@@ -8,6 +8,9 @@ function init() {
         //TODO: Look into setting the width and height + html table in DOM as configurable instead of hardcoding it
         width: 4,
         height: 4,
+        //Variable storing the current score for the two players.
+        blackScore: 0,
+        whiteScore: 0,
         data:[],
 
         //Creates a 2D array initialized with null values for the board model
@@ -22,12 +25,37 @@ function init() {
             this.data = data;
         },
 
-        setCell: function(x, y, value){
-            this.data[y][x] = value;
+        setCell: function(x, y, newCellValue) {
+            var prevCellValue = this.data[y][x];
+            this.data[y][x] = newCellValue;
+            this.updateScores(prevCellValue, newCellValue);
         },
 
         getCell: function(x, y){
             return this.data[y][x];
+        },
+
+        //function in charge of updating the score for the players
+        updateScores: function( prevValue, newValue ) {
+            if( prevValue == newValue ){
+                console.log('Do not increment or decrement counter as no change in cell value.');
+            } else if( prevValue == null && newValue == 'black'){
+                this.blackScore++;
+            } else if( prevValue == null && newValue == 'white') {
+                this.whiteScore++;
+            } else if ( prevValue == 'black' && newValue == null) {
+                this.blackScore--;
+            } else if ( prevValue == 'white' && newValue == null) {
+                this.whiteScore--;
+            } else if (prevValue == 'black' && newValue == 'white') {
+                this.blackScore--;
+                this.whiteScore++;
+            } else if (prevValue == 'white' && newValue == 'black') {
+                this.whiteScore--;
+                this.blackScore++;
+            } else {
+                console.log('Undefined condition in updateScore()');
+            }
         },
 
         printBoard: function(){
@@ -44,8 +72,9 @@ function init() {
         }
     };
 
+    //Variable storing the current player at any point in time
     var currentPlayer = 'black';
-
+    
     //Set the label for the current player
     document.getElementById('currentPlayer').innerHTML = "It is " + currentPlayer + "'s turn.";
 
@@ -60,6 +89,9 @@ function init() {
     //print board status to console for debugging
     board.printBoard();
 
+    console.log('The current black score is : ' + board.blackScore);
+    console.log('The current white score is : ' + board.whiteScore);
+
 
     //Assign event listeners to all cells in the board
     function addListeners() {
@@ -72,6 +104,8 @@ function init() {
     //Event listener to handle processing when user clicks a cell
     function changeColor(event){
         console.log('clicked');
+
+        //TODO: Fix this selector as if user clicks on a cell which is already filled target is div whose firstchild is undefined
         console.log(event.target.firstChild.id);
 
 
@@ -110,7 +144,11 @@ function init() {
             console.log('Ignored click as it is not a valid move for current player');
         }
 
+        updateScoreBoard();
+
         board.printBoard();
+        console.log('The current black score is : ' + board.blackScore);
+        console.log('The current white score is : ' + board.whiteScore);
     }
 
 
@@ -165,6 +203,7 @@ function init() {
         setCell('12', 'black');
         setCell('21', 'black');
         setCell('22', 'white');
+        updateScoreBoard();
     }
 
     //Use getValidMoves to check which cells are valid moves for the current player
@@ -210,10 +249,18 @@ function init() {
 
     //Processes the end of the game
     function endTheGame () {
-        //Tabulate the results and get the winner of the game from the score counter
-        var winner = '';
-        //Set message that it is the end of game
-        document.getElementById('currentPlayer').innerHTML = "Game Over! The winner is ??? ";
+        //get the winner of the game from the score counter
+        if(board.blackScore == board.whiteScore){
+            document.getElementById('currentPlayer').innerHTML = 'Game Over! It is a Tie!';
+        } else{
+            var winner = '';
+            if (board.blackScore > board.whiteScore ){
+                winner = 'Black';
+            } else {
+                winner = 'White';
+            }
+            document.getElementById('currentPlayer').innerHTML = 'Game Over! The winner is ' + winner + '!';
+        }
     }
 
     //Changes the currentPlayer to the next player
@@ -222,7 +269,12 @@ function init() {
         currentPlayer = player;
         //Update display display to show which player is next
         document.getElementById('currentPlayer').innerHTML = "It is " + player + "'s turn.";
+    }
 
+    //Updates the score in the Dom
+    function updateScoreBoard() {
+        document.getElementById('blackScore').innerHTML = board.blackScore;
+        document.getElementById('whiteScore').innerHTML = board.whiteScore;
     }
 
     //Check board to see which positions are valid moves for the current player
@@ -324,7 +376,7 @@ function init() {
         board.setCell(x, y, null);
         console.log('Testing position x =' + x + " y= " + y);
         console.log('length of tobeflipped ' + toBeFlipped.length );
-        console.log('positions to be flipped ' + toBeFlipped)
+        console.log('positions to be flipped ' + toBeFlipped);
         //Return list of discs to be flipped
         return toBeFlipped;
     }
