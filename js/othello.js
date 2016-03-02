@@ -72,15 +72,18 @@ function init() {
     //Event listener to handle processing when user clicks a cell
     function changeColor(event){
         console.log('clicked');
-        console.log(event.target.id);
+        console.log(event.target.firstChild.id);
+
 
         //Do we really need the Id? Can we just do var cell = event.target?
-        var cellId = event.target.id;
+        //Target is the td, to get the id of the circle, get id of the first child.
+        var cellId = event.target.firstChild.id;
         var cell = document.getElementById(cellId);
+        var isValidMove = event.target.className == 'validMove';
         //Check if this button has not been clicked before
         var isUnclickedButton = getCell(cellId) == null;
 
-        if (currentPlayer == 'black' && isUnclickedButton) {
+        if (isValidMove && currentPlayer == 'black' && isUnclickedButton ) {
             //TODO: To try and  refactor the below code so that the below order dosent matter.
             //TODO: processing by side effect is prone to error hard to debug
             //Note flip cells before changing currentPlayer as flipCells uses the value of currentPlayer
@@ -93,7 +96,7 @@ function init() {
             //Set valid cell only after the board and currentPlayer is updated
             setValidCells();
 
-        } else if (currentPlayer == 'white' && isUnclickedButton) {
+        } else if (isValidMove && currentPlayer == 'white' && isUnclickedButton) {
             //Note flip cells before changing currentPlayer as flipCells uses the value of currentPlayer
             //Also before setting cell color as function ignores cells which are already set
             flipCells(cellId);
@@ -104,7 +107,7 @@ function init() {
             //Set valid cell only after the board and currentPlayer is updated
             setValidCells();
         } else {
-            console.log('Ignore click as button has been clicked before.');
+            console.log('Ignored click as it is not a valid move for current player');
         }
 
         board.printBoard();
@@ -174,12 +177,43 @@ function init() {
             position.className='';
         });
 
-        newValidMoves.forEach( function(position){
-            var cell = document.getElementById(position[0].toString() + position[1].toString());
-            cell.className ='validMove';
-        });
+        if(newValidMoves.length > 0 ){
+            //If the current player has valid moves proceed to set the location of new moves on the board
+            newValidMoves.forEach( function(position){
+                //Set the validMove style on the parent td element not the circle.
+                var cell = document.getElementById(position[0].toString() + position[1].toString()).parentNode;
+                cell.className ='validMove';
+            });
+
+        } else {
+            //Check if other player has valid moves
+            //Require to switch player as getValidMoves has a dependancy on the value of currentPlayer
+            switchPlayerTo(opponentColor());
+            var opponentValidMoves = getValidMoves();
+
+            //If the current player has no valid move but the next player has valid moves
+            if(newValidMoves.length == 0 && opponentValidMoves.length > 0){
+                //alert the current player that their turn is passed
+                alert(opponentColor() + ' player you have no valid moves, passing your turn to ' + currentPlayer + ' player');
+                //After they click ok, switch to the next player and set the locations of their valid moves.
+                setValidCells();
+
+            } else {
+                //Else if both players has no valid moves end the game
+                endTheGame();
+            }
+
+        }
 
         //TODO: Should we remove the event listener from those cells which are not valid moves? or just handle in the listener if/else
+    }
+
+    //Processes the end of the game
+    function endTheGame () {
+        //Tabulate the results and get the winner of the game from the score counter
+        var winner = '';
+        //Set message that it is the end of game
+        document.getElementById('currentPlayer').innerHTML = "Game Over! The winner is ??? ";
     }
 
     //Changes the currentPlayer to the next player

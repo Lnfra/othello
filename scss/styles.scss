@@ -1,3 +1,27 @@
+
+//Classic color scheme
+$boardColor: green;
+$darkColor: black;
+$lightColor: white;
+$gridColor: #66b266;
+$shadowDark: ''; //3d effect for dark disc
+$shadowLight: ''; //3d effect for light disc
+$validHover: grey;
+
+
+//Country home style
+//http://www.color-hex.com/
+//https://css-tricks.com/circular-3d-buttons/
+//https://color.adobe.com/create/color-wheel
+
+//$boardColor: #ccb647; //Yellow
+//$darkColor: #ed8b03; //Orange
+//$lightColor: #95b205; //Green
+//$gridColor: #d6c46b; //lighter shade background col
+//$shadowDark: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
+//$shadowLight: 0px 3px 8px #687c03, inset 0px 2px 3px #b4c950; //3d effect for light disc
+//$validHover: #e0d390;
+
 h2 {
   text-align: center;
 }
@@ -6,40 +30,50 @@ h2 {
 
 table, th, td {
   border-collapse: collapse;
-  border: 1px solid black;
-  text-align: center;
-  background-color:green;
-  font-size: 30px;
+  table-layout: fixed; // to give table a fixed width height regardless of content
   margin:auto;
-  padding: 60px;
+  width: 130px;
+  height: 130px;
+  background-color: $boardColor;
+  border: 2px solid;
+  border-color: $gridColor;
+  //text-align: center;
+  //font-size: 30px;
 }
 
-td {
-
-}
 
 //Declare circle as a mixin so that it is not duplicated
 @mixin circle {
   border-radius: 50%;
-  width: 60px;
-  height: 60px;
-  padding: 30px;
+  width: 80px;
+  height: 80px;
+  margin-left:auto; //To center the circle
+  margin-right:auto;
+  margin-top:auto;
+  margin-bottom: auto;
+
+  //padding: 30px;
   /* width and height can be anything, as long as they're equal */
 }
 
 .black {
   @include circle;
-  background-color: black;
+  //background-color: black;
+  background-color: $darkColor;
+  box-shadow: $shadowDark;
 }
 
 .white {
   @include circle;
-  background-color: whitesmoke;
+  //background-color: whitesmoke;
+  background-color: $lightColor;
+  box-shadow: $shadowLight;
 }
 
 
 td.validMove:hover {
-  background-color:grey;
-  border: dashed;
+  background-color: $validHover;
+  border:dashed;
   border-color: white;
 }
+
