@@ -126,9 +126,7 @@ td.validMove:hover {
   color: $circleLightColor;
 }
 
-html,
-body,
-.page {
+html, body, .page {
   height: 100%; /* needed for proper layout */
 }
 

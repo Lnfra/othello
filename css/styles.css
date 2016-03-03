@@ -89,9 +89,7 @@ td.validMove:hover {
   color: #95b205;
 }
 
-html,
-body,
-.page {
+html, body, .page {
   height: 100%;
   /* needed for proper layout */
 }
