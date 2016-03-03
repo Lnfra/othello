@@ -13,30 +13,67 @@ $circleHeight: 80px;
 //$circleHeight: 60px;
 
 //Classic color scheme
-$boardColor: green;
-$gridColor: #66b266;
-$circleDarkColor: black;
-$circleDarkShadow: ''; //3d effect for dark disc
-$circleLightColor: white;
-$circleLightShadow: ''; //3d effect for light disc
-$cellValidHover: grey;
+//$boardColor: green;
+//$gridColor: #66b266;
+//$circleDarkColor: black;
+//$circleDarkShadow: ''; //3d effect for dark disc
+//$circleLightColor: white;
+//$circleLightShadow: ''; //3d effect for light disc
+//$cellValidHover: grey;
 
 
 //Country home color scheme
 //http://www.color-hex.com/
 //https://css-tricks.com/circular-3d-buttons/
-//$boardColor: #ccb647;
-//$gridColor: #e5daa3;
-//$circleDarkColor: #ed8b03;
-//$circleDarkShadow: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
-//$circleLightColor: #95b205;
-//$circleLightShadow: 0px 3px 8px #687c03, inset 0px 2px 3px #b4c950; //3d effect for light disc
-//$cellValidHover: #e0d390;
+$boardColor: #ccb647;
+$gridColor: #e5daa3;
+$circleDarkColor: #ed8b03;
+$circleDarkShadow: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
+$circleLightColor: #95b205;
+$circleLightShadow: 0px 4px 9px #687c03, inset 0px 3px 4px #b4c950; //3d effect for light disc
+$cellValidHover: #e0d390;
 
-h1, h2 {
+
+body {
+  padding:0;
+  margin:0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+#currentPlayer {
   text-align: center;
 }
 
+
+.page {
+  display: flex;
+  flex-direction: column;
+}
+
+.page-header {
+  flex: 0 0 auto;
+  background-color: #dcdcdc;
+}
+
+.page-content {
+  flex: 1 1 auto;
+  position: relative;/* need this to position inner content */
+  overflow-y: auto;
+}
+
+/*Style for header*/
+header {
+  display: block;
+  min-height: 30px;
+  border: 1px solid black;
+  background: darkslategray;
+  text-align: right;
+  color: whitesmoke;
+  display: flex;
+  flex-flow: row;
+  justify-content: space-around;
+
+}
 
 table, th, td {
   border-collapse: collapse;
@@ -47,8 +84,6 @@ table, th, td {
   background-color: $boardColor;
   border: 2px solid;
   border-color: $gridColor;
-  //text-align: center;
-  //font-size: 30px;
 }
 
 
@@ -62,24 +97,20 @@ table, th, td {
   margin-top:auto;
   margin-bottom: auto;
 
-  //padding: 30px;
   /* width and height can be anything, as long as they're equal */
 }
 
-.black {
+.player1 {
   @include circle;
-  //background-color: black;
   background-color: $circleDarkColor;
   box-shadow: $circleDarkShadow;
 }
 
-.white {
+.player2 {
   @include circle;
-  //background-color: whitesmoke;
   background-color: $circleLightColor;
   box-shadow: $circleLightShadow;
 }
-
 
 td.validMove:hover {
   background-color: $cellValidHover;
@@ -87,3 +118,20 @@ td.validMove:hover {
   border-color: white;
 }
 
+.darkColor {
+  color: $circleDarkColor;
+}
+
+.lightColor {
+  color: $circleLightColor;
+}
+
+html,
+body,
+.page {
+  height: 100%; /* needed for proper layout */
+}
+
+body {
+  overflow: hidden;
+}
