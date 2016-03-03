@@ -6,6 +6,8 @@ function init() {
     //Model of board
     var board = {
         //TODO: Look into setting the width and height + html table in DOM as configurable instead of hardcoding it
+        // Change width and height = 8 for 8 x 8 board
+        // Change width and height = 4 for 4 x 4 board
         width: 4,
         height: 4,
         //Variable storing the current score for the two players.
@@ -199,10 +201,19 @@ function init() {
 
     //Set the board to the initial layout
     function initialPositions() {
-        setCell('11', 'white');
-        setCell('12', 'black');
-        setCell('21', 'black');
-        setCell('22', 'white');
+        //Calculate the center of board
+        var xPos = board.width / 2;
+        var yPos = board.height / 2;
+
+        var whitePos2 = xPos.toString() + yPos.toString();
+        var whitePos1 = (xPos-1).toString() + (yPos-1).toString();
+        var blackPos2 = (xPos-1).toString() + yPos.toString();
+        var blackPos1 = xPos.toString() + (yPos-1).toString();
+
+        setCell(whitePos1, 'white');
+        setCell(blackPos1, 'black');
+        setCell(blackPos2, 'black');
+        setCell(whitePos2, 'white');
         updateScoreBoard();
     }
 

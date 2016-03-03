@@ -1,39 +1,49 @@
 
+//Sizing for 4 x 4 board
+$boardWidth: 130px;
+$boardHeight: 130px;
+$circleWidth: 80px;
+$circleHeight: 80px;
+
+
+//Sizing for 8 x 8 board
+//$boardWidth: 90px;
+//$boardHeight: 90px;
+//$circleWidth: 60px;
+//$circleHeight: 60px;
+
 //Classic color scheme
 $boardColor: green;
-$darkColor: black;
-$lightColor: white;
 $gridColor: #66b266;
-$shadowDark: ''; //3d effect for dark disc
-$shadowLight: ''; //3d effect for light disc
-$validHover: grey;
+$circleDarkColor: black;
+$circleDarkShadow: ''; //3d effect for dark disc
+$circleLightColor: white;
+$circleLightShadow: ''; //3d effect for light disc
+$cellValidHover: grey;
 
 
-//Country home style
+//Country home color scheme
 //http://www.color-hex.com/
 //https://css-tricks.com/circular-3d-buttons/
-//https://color.adobe.com/create/color-wheel
-
-//$boardColor: #ccb647; //Yellow
-//$darkColor: #ed8b03; //Orange
-//$lightColor: #95b205; //Green
-//$gridColor: #d6c46b; //lighter shade background col
-//$shadowDark: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
-//$shadowLight: 0px 3px 8px #687c03, inset 0px 2px 3px #b4c950; //3d effect for light disc
-//$validHover: #e0d390;
+//$boardColor: #ccb647;
+//$gridColor: #e5daa3;
+//$circleDarkColor: #ed8b03;
+//$circleDarkShadow: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
+//$circleLightColor: #95b205;
+//$circleLightShadow: 0px 3px 8px #687c03, inset 0px 2px 3px #b4c950; //3d effect for light disc
+//$cellValidHover: #e0d390;
 
 h1, h2 {
   text-align: center;
 }
 
-//FIXME: To fix the grid so tha it is the same size filled as well as empty
 
 table, th, td {
   border-collapse: collapse;
   table-layout: fixed; // to give table a fixed width height regardless of content
   margin:auto;
-  width: 130px;
-  height: 130px;
+  width: $boardWidth;
+  height: $boardHeight;
   background-color: $boardColor;
   border: 2px solid;
   border-color: $gridColor;
@@ -45,8 +55,8 @@ table, th, td {
 //Declare circle as a mixin so that it is not duplicated
 @mixin circle {
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: $circleWidth;
+  height: $circleHeight;
   margin-left:auto; //To center the circle
   margin-right:auto;
   margin-top:auto;
@@ -59,21 +69,21 @@ table, th, td {
 .black {
   @include circle;
   //background-color: black;
-  background-color: $darkColor;
-  box-shadow: $shadowDark;
+  background-color: $circleDarkColor;
+  box-shadow: $circleDarkShadow;
 }
 
 .white {
   @include circle;
   //background-color: whitesmoke;
-  background-color: $lightColor;
-  box-shadow: $shadowLight;
+  background-color: $circleLightColor;
+  box-shadow: $circleLightShadow;
 }
 
 
 td.validMove:hover {
-  background-color: $validHover;
-  border:dashed;
+  background-color: $cellValidHover;
+  border: dashed;
   border-color: white;
 }
 
