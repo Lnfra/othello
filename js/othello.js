@@ -11,8 +11,12 @@ function init() {
         width: 4,
         height: 4,
         //Variable storing the current score for the two players.
-        blackScore: 0,
-        whiteScore: 0,
+        player1Score: 0,
+        player2Score: 0,
+
+        //Variable storing the current player at any point in time
+        currentPlayer: 'player1',
+
         data:[],
 
         //Creates a 2D array initialized with null values for the board model
@@ -41,20 +45,20 @@ function init() {
         updateScores: function( prevValue, newValue ) {
             if( prevValue == newValue ){
                 console.log('Do not increment or decrement counter as no change in cell value.');
-            } else if( prevValue == null && newValue == 'black'){
-                this.blackScore++;
-            } else if( prevValue == null && newValue == 'white') {
-                this.whiteScore++;
-            } else if ( prevValue == 'black' && newValue == null) {
-                this.blackScore--;
-            } else if ( prevValue == 'white' && newValue == null) {
-                this.whiteScore--;
-            } else if (prevValue == 'black' && newValue == 'white') {
-                this.blackScore--;
-                this.whiteScore++;
-            } else if (prevValue == 'white' && newValue == 'black') {
-                this.whiteScore--;
-                this.blackScore++;
+            } else if( prevValue == null && newValue == 'player1'){
+                this.player1Score++;
+            } else if( prevValue == null && newValue == 'player2') {
+                this.player2Score++;
+            } else if ( prevValue == 'player1' && newValue == null) {
+                this.player1Score--;
+            } else if ( prevValue == 'player2' && newValue == null) {
+                this.player2Score--;
+            } else if (prevValue == 'player1' && newValue == 'player2') {
+                this.player1Score--;
+                this.player2Score++;
+            } else if (prevValue == 'player2' && newValue == 'player1') {
+                this.player2Score--;
+                this.player1Score++;
             } else {
                 console.log('Undefined condition in updateScore()');
             }
@@ -71,14 +75,22 @@ function init() {
         //TODO: Write a test case to verify method returns correct results
         isOnboard: function(x, y) {
             return (y >= 0 && y < this.height) && (x >=0 && x < this.width);
+        },
+
+        currentPlayerName: function(){
+            if(this.currentPlayer == 'player1'){
+                return 'Player 1';
+            }else if(this.currentPlayer == 'player2') {
+                return 'Player 2';
+            }else {
+                return '';
+            }
         }
     };
 
-    //Variable storing the current player at any point in time
-    var currentPlayer = 'black';
-    
-    //Set the label for the current player
-    document.getElementById('currentPlayer').innerHTML = "It is " + currentPlayer + "'s turn.";
+
+    //Start the game with player1
+    switchPlayerTo('player1');
 
     //Initialize the board
     board.createBoard();
@@ -91,12 +103,12 @@ function init() {
     //print board status to console for debugging
     board.printBoard();
 
-    console.log('The current black score is : ' + board.blackScore);
-    console.log('The current white score is : ' + board.whiteScore);
+    console.log('The current player1 score is : ' + board.player1Score);
+    console.log('The current player2 score is : ' + board.player2Score);
 
 
-    //Assign event listeners to all cells in the board
     function addListeners() {
+        //Assign event listeners to all cells in the board
         var cells = Array.from(document.querySelectorAll('table td'));
         for (var i = 0; i < cells.length; i++) {
             cells[i].addEventListener('click', changeColor);
@@ -119,29 +131,35 @@ function init() {
         //Check if this button has not been clicked before
         var isUnclickedButton = getCell(cellId) == null;
 
-        if (isValidMove && currentPlayer == 'black' && isUnclickedButton ) {
+        if (isValidMove && board.currentPlayer == 'player1' && isUnclickedButton ) {
             //TODO: To try and  refactor the below code so that the below order dosent matter.
             //TODO: processing by side effect is prone to error hard to debug
             //Note flip cells before changing currentPlayer as flipCells uses the value of currentPlayer
             //Also before setting cell color as function ignores cells which are already set
+
             flipCells(cellId);
 
-            setCell(cellId, 'black');
-            //checkForWinner();
-            switchPlayerTo('white');
+            setCell(cellId, 'player1');
+
+            switchPlayerTo('player2');
             //Set valid cell only after the board and currentPlayer is updated
             setValidCells();
 
-        } else if (isValidMove && currentPlayer == 'white' && isUnclickedButton) {
+
+
+        } else if (isValidMove && board.currentPlayer == 'player2' && isUnclickedButton) {
             //Note flip cells before changing currentPlayer as flipCells uses the value of currentPlayer
             //Also before setting cell color as function ignores cells which are already set
+
             flipCells(cellId);
 
-            setCell(cellId, 'white');
-            //checkForWinner();
-            switchPlayerTo('black');
+            setCell(cellId, 'player2');
+
+            switchPlayerTo('player1');
             //Set valid cell only after the board and currentPlayer is updated
             setValidCells();
+
+
         } else {
             console.log('Ignored click as it is not a valid move for current player');
         }
@@ -149,8 +167,8 @@ function init() {
         updateScoreBoard();
 
         board.printBoard();
-        console.log('The current black score is : ' + board.blackScore);
-        console.log('The current white score is : ' + board.whiteScore);
+        console.log('The current player1 score is : ' + board.player1Score);
+        console.log('The current player2 score is : ' + board.player2Score);
     }
 
 
@@ -166,11 +184,11 @@ function init() {
         //TODO: Possible to write some method to flips both model and dom at the same time instead of handling seperately?!
         toFlip.forEach( function(cell) {
             //Flip the cells in the board model
-            board.setCell(cell[0], cell[1], currentPlayer );
+            board.setCell(cell[0], cell[1], board.currentPlayer );
 
             //Also remember to flip the cells in the Dom
             var cellId = cell[0].toString() + cell[1].toString();
-            document.getElementById(cellId).className = currentPlayer;
+            document.getElementById(cellId).className = board.currentPlayer;
 
         });
 
@@ -179,14 +197,14 @@ function init() {
     }
 
     //Sets the value of a cell in the model and the dom
-    function setCell(cellId, color) {
+    function setCell(cellId, player) {
         var cellIds =  cellId.split('');
         var vertical = Number(cellIds[1]);
         var horizontal = Number(cellIds[0]);
         //Set board value
-        board.setCell(horizontal, vertical, color.toLowerCase());
+        board.setCell(horizontal, vertical, player.toLowerCase());
         //Set dom value
-        document.getElementById(cellId).className = color;
+        document.getElementById(cellId).className = player;
         board.printBoard();
     }
 
@@ -210,10 +228,10 @@ function init() {
         var blackPos2 = (xPos-1).toString() + yPos.toString();
         var blackPos1 = xPos.toString() + (yPos-1).toString();
 
-        setCell(whitePos1, 'white');
-        setCell(blackPos1, 'black');
-        setCell(blackPos2, 'black');
-        setCell(whitePos2, 'white');
+        setCell(whitePos1, 'player2');
+        setCell(blackPos1, 'player1');
+        setCell(blackPos2, 'player1');
+        setCell(whitePos2, 'player2');
         updateScoreBoard();
     }
 
@@ -244,7 +262,7 @@ function init() {
             //If the current player has no valid move but the next player has valid moves
             if(newValidMoves.length == 0 && opponentValidMoves.length > 0){
                 //alert the current player that their turn is passed
-                alert(opponentColor() + ' player you have no valid moves, passing your turn to ' + currentPlayer + ' player');
+                alert(opponentColor() + ' you have no valid moves, passing your turn to ' + board.currentPlayerName() );
                 //After they click ok, switch to the next player and set the locations of their valid moves.
                 setValidCells();
 
@@ -261,14 +279,14 @@ function init() {
     //Processes the end of the game
     function endTheGame () {
         //get the winner of the game from the score counter
-        if(board.blackScore == board.whiteScore){
+        if(board.player1Score == board.player2Score){
             document.getElementById('currentPlayer').innerHTML = 'Game Over! It is a Tie!';
         } else{
             var winner = '';
-            if (board.blackScore > board.whiteScore ){
-                winner = 'Black';
+            if (board.player1Score > board.player2Score ){
+                winner = 'Player 1';
             } else {
-                winner = 'White';
+                winner = 'Player 2';
             }
             document.getElementById('currentPlayer').innerHTML = 'Game Over! The winner is ' + winner + '!';
         }
@@ -277,15 +295,28 @@ function init() {
     //Changes the currentPlayer to the next player
     function switchPlayerTo(player) {
         //Toggle value of current player
-        currentPlayer = player;
+        board.currentPlayer = player;
         //Update display display to show which player is next
-        document.getElementById('currentPlayer').innerHTML = "It is " + player + "'s turn.";
+        document.getElementById('currentPlayer').innerHTML = "It is " + board.currentPlayerName() + "'s turn.";
+
+        if(board.currentPlayer == 'player1'){
+            document.getElementById('leftArrow').style.visibility = 'visible';
+            document.getElementById('rightArrow').style.visibility = 'hidden';
+        }else {
+            document.getElementById('leftArrow').style.visibility = 'hidden';
+            document.getElementById('rightArrow').style.visibility = 'visible';
+        }
     }
 
     //Updates the score in the Dom
     function updateScoreBoard() {
-        document.getElementById('blackScore').innerHTML = board.blackScore;
-        document.getElementById('whiteScore').innerHTML = board.whiteScore;
+        Array.from(document.getElementsByClassName('player1Score')).forEach( function(element){
+            element.innerHTML = board.player1Score;
+        });
+
+        Array.from(document.getElementsByClassName('player2Score')).forEach( function(element){
+            element.innerHTML = board.player2Score;
+        });
     }
 
     //Check board to see which positions are valid moves for the current player
@@ -325,7 +356,7 @@ function init() {
         }else{
             //Set the cell temporarily for the purpose of evaluating if it will cause discs to flip
             //Reset the cell back to null before end of function
-            board.setCell(x, y, currentPlayer);
+            board.setCell(x, y, board.currentPlayer);
         }
 
         //Loop through each direction
@@ -345,7 +376,7 @@ function init() {
                     currY = currY + currDir[1];
                     if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == opponentColor()){
                        continue;
-                    } else if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == currentPlayer){
+                    } else if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == board.currentPlayer){
                         //Keep navigating backwards until you have reached the starting position
                         while(true){
                             console.log('in while loop 2')
@@ -394,10 +425,10 @@ function init() {
 
     //Returns the color of the other player
     function opponentColor(){
-        if(currentPlayer.toLowerCase() == 'black'){
-            return 'white';
+        if(board.currentPlayer.toLowerCase() == 'player1'){
+            return 'player2';
         } else {
-            return 'black';
+            return 'player1';
         }
     }
 

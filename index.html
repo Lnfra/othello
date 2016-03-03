@@ -4,38 +4,53 @@
     <meta charset="UTF-8">
     <title>Othello</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+    <link href='https://fonts.googleapis.com/css?family=Montserrat' rel='stylesheet' type='text/css'>
+
 </head>
 <body>
-<h1>Othello v2</h1>
-<h2>Black Score =  <span id="blackScore">0</span>  White Score = <span id="whiteScore">0</span></h2>
-<h2 id="currentPlayer"></h2>
+<div class="page">
+    <div class="page-header">
+        <header>
+            <!--<div id="menuButton"><h2><i class="fa fa-bars fa-2x"></i></h2></div>-->
+            <h2><i class="fa fa-user fa-2x darkColor"></i>&nbsp; Player 1 Score =  <span class="player1Score">0</span></h2>
+            <h2><i class="fa fa-arrow-left fa-2x" id="leftArrow"></i></h2>
+            <h2 id="currentPlayer"></h2>
+            <h2><i class="fa fa-arrow-right fa-2x" id="rightArrow"></i></h2>
+            <h2><i class="fa fa-user fa-2x lightColor"></i>&nbsp; Player 2 Score = <span class="player2Score">0</span></h2>
+            <h1>Othello v3</h1>
+        </header>
+</div> <!--end of page-header-->
+<div class="page-content">
 
-<table>
-    <tr>
-        <td><div id="00"></div></td>
-        <td><div id="10"></div></td>
-        <td><div id="20"></div></td>
-        <td><div id="30"></div></td>
-    </tr>
-    <tr>
-        <td><div id="01"></div></td>
-        <td><div id="11"></div></td>
-        <td><div id="21"></div></td>
-        <td><div id="31"></div></td>
-    </tr>
-    <tr>
-        <td><div id="02"></div></td>
-        <td><div id="12"></div></td>
-        <td><div id="22"></div></td>
-        <td><div id="32"></div></td>
-    </tr>
-    <tr>
-        <td><div id="03"></div></td>
-        <td><div id="13"></div></td>
-        <td><div id="23"></div></td>
-        <td><div id="33"></div></td>
-    </tr>
-</table>
+    <table id="board">
+        <tr>
+            <td><div id="00"></div></td>
+            <td><div id="10"></div></td>
+            <td><div id="20"></div></td>
+            <td><div id="30"></div></td>
+        </tr>
+        <tr>
+            <td><div id="01"></div></td>
+            <td><div id="11"></div></td>
+            <td><div id="21"></div></td>
+            <td><div id="31"></div></td>
+        </tr>
+        <tr>
+            <td><div id="02"></div></td>
+            <td><div id="12"></div></td>
+            <td><div id="22"></div></td>
+            <td><div id="32"></div></td>
+        </tr>
+        <tr>
+            <td><div id="03"></div></td>
+            <td><div id="13"></div></td>
+            <td><div id="23"></div></td>
+            <td><div id="33"></div></td>
+        </tr>
+    </table>
 <script src="js/othello.js"></script>
+</div><!--end of page content    -->
+</div> <!--end of page div-->
 </body>
 </html>
