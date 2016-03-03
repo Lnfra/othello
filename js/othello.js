@@ -10,6 +10,7 @@ function init() {
         // Change width and height = 4 for 4 x 4 board
         width: 4,
         height: 4,
+        data:[],
         //Variable storing the current score for the two players.
         player1Score: 0,
         player2Score: 0,
@@ -17,7 +18,10 @@ function init() {
         //Variable storing the current player at any point in time
         currentPlayer: 'player1',
 
-        data:[],
+        //Returns the other player
+        opponent: function(){
+            return (this.currentPlayer.toLowerCase() == 'player1') ? 'player2' : 'player1';
+        },
 
         //Creates a 2D array initialized with null values for the board model
         createBoard: function(){
@@ -77,15 +81,16 @@ function init() {
             return (y >= 0 && y < this.height) && (x >=0 && x < this.width);
         },
 
+        //Returns the name of the current player
         currentPlayerName: function(){
-            if(this.currentPlayer == 'player1'){
-                return 'Player 1';
-            }else if(this.currentPlayer == 'player2') {
-                return 'Player 2';
-            }else {
-                return '';
-            }
+            return (this.currentPlayer.toLowerCase() == 'player1') ? 'Player 1' : 'Player 2';
+        },
+
+        //Returns the name of the other player
+        opponentName: function(){
+            return (this.currentPlayer.toLowerCase() == 'player1') ? 'Player 2' : 'Player 1';
         }
+
     };
 
 
@@ -256,13 +261,17 @@ function init() {
         } else {
             //Check if other player has valid moves
             //Require to switch player as getValidMoves has a dependancy on the value of currentPlayer
-            switchPlayerTo(opponentColor());
+            switchPlayerTo(board.opponent());
             var opponentValidMoves = getValidMoves();
 
             //If the current player has no valid move but the next player has valid moves
             if(newValidMoves.length == 0 && opponentValidMoves.length > 0){
                 //alert the current player that their turn is passed
-                alert(opponentColor() + ' you have no valid moves, passing your turn to ' + board.currentPlayerName() );
+                alert(board.opponentName() + ' you have no valid moves, passing your turn to ' + board.currentPlayerName() );
+
+                //Append skipped status msg to score board
+                document.getElementById('currentPlayer').innerHTML += " Skipped " + board.opponentName();
+
                 //After they click ok, switch to the next player and set the locations of their valid moves.
                 setValidCells();
 
@@ -367,14 +376,14 @@ function init() {
 
             currX = currX + currDir[0];
             currY = currY + currDir[1];
-            if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == opponentColor()){
+            if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == board.opponent()){
                 //if the very next position contains opponents colour
                 //continue in the same direction
                 while(true){
                     console.log('in while loop 1')
                     currX = currX + currDir[0];
                     currY = currY + currDir[1];
-                    if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == opponentColor()){
+                    if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == board.opponent()){
                        continue;
                     } else if(board.isOnboard(currX, currY) && board.getCell(currX, currY) == board.currentPlayer){
                         //Keep navigating backwards until you have reached the starting position
@@ -423,14 +432,7 @@ function init() {
         return toBeFlipped;
     }
 
-    //Returns the color of the other player
-    function opponentColor(){
-        if(board.currentPlayer.toLowerCase() == 'player1'){
-            return 'player2';
-        } else {
-            return 'player1';
-        }
-    }
+
 
 
 }// end of init()
