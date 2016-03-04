@@ -54,51 +54,51 @@ table, th, td {
   border-collapse: collapse;
   table-layout: fixed;
   margin: auto;
-  width: 130px;
-  height: 130px;
-  background-color: green;
+  width: 90px;
+  height: 90px;
+  background-color: #ccb647;
   border: 2px solid;
-  border-color: #66b266;
+  border-color: #e5daa3;
 }
 
 .player1 {
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;
   /* width and height can be anything, as long as they're equal */
-  background-color: black;
-  box-shadow: "";
+  background-color: #ed8b03;
+  box-shadow: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e;
 }
 
 .player2 {
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
   margin-left: auto;
   margin-right: auto;
   margin-top: auto;
   margin-bottom: auto;
   /* width and height can be anything, as long as they're equal */
-  background-color: white;
-  box-shadow: "";
+  background-color: #95b205;
+  box-shadow: 0px 4px 9px #687c03, inset 0px 3px 4px #b4c950;
 }
 
 td.validMove:hover {
-  background-color: grey;
+  background-color: #e0d390;
   border: dashed;
   border-color: white;
 }
 
 .darkColor {
-  color: black;
+  color: #ed8b03;
 }
 
 .lightColor {
-  color: white;
+  color: #95b205;
 }
 
 /*# sourceMappingURL=styles.css.map */

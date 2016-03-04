@@ -1,37 +1,37 @@
 
 //Sizing for 4 x 4 board
-$boardWidth: 130px;
-$boardHeight: 130px;
-$circleWidth: 80px;
-$circleHeight: 80px;
+//$boardWidth: 130px;
+//$boardHeight: 130px;
+//$circleWidth: 80px;
+//$circleHeight: 80px;
 
 
 //Sizing for 8 x 8 board
-//$boardWidth: 90px;
-//$boardHeight: 90px;
-//$circleWidth: 60px;
-//$circleHeight: 60px;
+$boardWidth: 90px;
+$boardHeight: 90px;
+$circleWidth: 60px;
+$circleHeight: 60px;
 
 //Classic color scheme
-$boardColor: green;
-$gridColor: #66b266;
-$circleDarkColor: black;
-$circleDarkShadow: ''; //3d effect for dark disc
-$circleLightColor: white;
-$circleLightShadow: ''; //3d effect for light disc
-$cellValidHover: grey;
+//$boardColor: green;
+//$gridColor: #66b266;
+//$circleDarkColor: black;
+//$circleDarkShadow: ''; //3d effect for dark disc
+//$circleLightColor: white;
+//$circleLightShadow: ''; //3d effect for light disc
+//$cellValidHover: grey;
 
 
 //Country home color scheme
 //http://www.color-hex.com/
 //https://css-tricks.com/circular-3d-buttons/
-//$boardColor: #ccb647;
-//$gridColor: #e5daa3;
-//$circleDarkColor: #ed8b03;
-//$circleDarkShadow: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
-//$circleLightColor: #95b205;
-//$circleLightShadow: 0px 4px 9px #687c03, inset 0px 3px 4px #b4c950; //3d effect for light disc
-//$cellValidHover: #e0d390;
+$boardColor: #ccb647;
+$gridColor: #e5daa3;
+$circleDarkColor: #ed8b03;
+$circleDarkShadow: 0px 4px 9px #a56102, inset 0px 3px 4px #f2ad4e; //3d effect for dark disc
+$circleLightColor: #95b205;
+$circleLightShadow: 0px 4px 9px #687c03, inset 0px 3px 4px #b4c950; //3d effect for light disc
+$cellValidHover: #e0d390;
 
 
 body {
@@ -135,5 +135,4 @@ td.validMove:hover {
 .lightColor {
   color: $circleLightColor;
 }
-
 
